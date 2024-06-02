@@ -4,44 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskList = document.getElementById('task-list');
     const completedTaskList = document.getElementById('completed-task-list');
 
-    addTaskButton.addEventListener('click', () => {
-        const taskText = taskInput.value.trim();
-        if (taskText) {
-            addTask(taskText);
-            taskInput.value = '';
-        }
-    });
-
-    function addTask(taskText) {
-        const taskItem = document.createElement('li');
-        const timestamp = new Date().toLocaleString();
-        taskItem.textContent = `${taskText} (Added: ${timestamp})`;
-
-        const completeButton = document.createElement('button');
-        completeButton.textContent = 'Complete';
-        completeButton.classList.add('complete-btn');
-        completeButton.addEventListener('click', () => {
-            const completionTimestamp = new Date().toLocaleString();
-            taskItem.classList.add('completed');
-            taskItem.textContent = `${taskText} (Completed: ${completionTimestamp})`;
-            completedTaskList.appendChild(taskItem);
-            completeButton.remove();
-        });
-
-        taskItem.appendChild(completeButton);
-        taskList.appendChild(taskItem);
-    }
-});
-
-//next
-document.addEventListener('DOMContentLoaded', () => {
-    const taskInput = document.getElementById('new-task-input');
-    const addTaskButton = document.getElementById('add-task-button');
-    const taskList = document.getElementById('task-list');
-    const completedTaskList = document.getElementById('completed-task-list');
+    // Base URL of the deployed back-end server
+    const API_URL = 'https://cipherbytee-9e4jug3s1-aryankumawat91s-projects.vercel.app';
 
     async function fetchTasks() {
-        const response = await fetch('http://localhost:5000/tasks');
+        const response = await fetch(`${API_URL}/tasks`);
         const tasks = await response.json();
         tasks.forEach(task => {
             if (task.isCompleted) {
@@ -57,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addTaskButton.addEventListener('click', async () => {
         const taskText = taskInput.value.trim();
         if (taskText) {
-            const response = await fetch('http://localhost:5000/tasks', {
+            const response = await fetch(`${API_URL}/tasks`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function completeTask(id, taskItem) {
-        await fetch(`http://localhost:5000/tasks/${id}`, {
+        await fetch(`${API_URL}/tasks/${id}`, {
             method: 'PUT'
         });
         taskItem.classList.add('completed');
@@ -97,3 +64,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
